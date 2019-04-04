@@ -1,9 +1,7 @@
-﻿@model List<string>
-
-<div>
+﻿<div>
     <h2>"Cleanware" Sample Generator</h2>
     <p>The idea behind this came up when testing whether or not an AV would alert on a file. Not wanting to use real malicious files on a bare metal machine, this was born. As time has gone on, I have added more and more file types to the list, while also updating the "squirelly-ness" of the files as AV's have gotten "smarter" about false positives.</p>
-    
+
     <div class="form-generation">
         <h3>Generate Samples</h3>
         <form asp-controller="Home" asp-action="Generate" method="post">
@@ -13,15 +11,33 @@
             <label for="fileType">sample type</label>
 
             <select id="fileType" name="fileType" class="form-control" style="max-width: 200px; margin: 0 auto; text-align: center">
-                @foreach (var typeName in Model)
-                {
-                    <option>@typeName</option>
-                }
-            </select>
+                @foreach (string typeName in ViewBag.FileTypes)
+                    {
+                        <option>@typeName</option>
+                    }                
+                </select>
 
-            <br />
+                <input id="archiveCheckBox" type="checkbox">
+                    Include in archive
+                </input>
 
-            <button type="submit" class="btn-lg btn-primary">generate sample(s)</button>
-        </form>    
+            <script>
+                $('#archiveCheckBox').change(function() {
+                    $('#archiveDiv').toggle();
+                });
+            </script>
+            <div id="archiveDiv" style="display:none">
+                <select id="archiveType" name="archiveType" class="form-control" style="max-width: 200px; margin: 0 auto; text-align: center">
+                    @foreach (string typeName in ViewBag.ArchiveTypes)
+                    {
+                        <option>@typeName</option>
+                    }
+                </select>
+            </div>
+
+                <br />
+
+                <button type="submit" class="btn-lg btn-primary">generate sample(s)</button>
+            </form>
+        </div>
     </div>
-</div>

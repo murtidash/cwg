@@ -22,21 +22,31 @@ namespace cwg.web.Controllers
         private static IEnumerable<BaseGenerator> GetGenerators()
         {
             var baseGenerators = GetObjects<BaseGenerator>();
-
-            baseGenerators.AddRange(GetObjects<BaseArchiveGenerator>());
-
             return baseGenerators.OrderBy(a => a.Name);
         }
 
-        public IActionResult Index() => View(GetGenerators().Select(a => a.Name).ToList());
+        private static IEnumerable<BaseArchiveGenerator> GetArchiveGenerators()
+        {
+            var archiveGenerators = GetObjects<BaseArchiveGenerator>();            
 
-        private BaseGenerator getGenerator(string name) => GetGenerators().FirstOrDefault(a => a.Name == name);
+            return archiveGenerators.OrderBy(a => a.Name);
+        }
+        
+        public IActionResult Index()
+        {            
+            ViewBag.archivetypes = GetArchiveGenerators().Select(a => a.Name).ToList();
+            ViewBag.filetypes = GetGenerators().Select(a => a.Name).ToList();            
+            return View();
+
+        }
+
+        private BaseGenerator getGenerator(string name) => GetGenerators().FirstOrDefault(a => a.Name == name);        
 
         [HttpGet]
         [HttpPost]
         public IActionResult Generate(int numberToGenerate, string fileType)
         {
-            var generator = getGenerator(fileType);
+            var generator = getGenerator(fileType);            
 
             if (generator == null)
             {
